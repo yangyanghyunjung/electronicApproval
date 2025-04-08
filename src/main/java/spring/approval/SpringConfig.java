@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import spring.approval.repository.ApproverRepository;
 import spring.approval.repository.documents.ExpenseReportRespository;
 import spring.approval.repository.IDocumentListRepository;
-import spring.approval.repository.JdbcDocumentListRepository;
+import spring.approval.repository.DocumentListRepository;
 import spring.approval.repository.user.JdbcTemplateMemberRepository;
 import spring.approval.repository.user.MemberRepository;
 import spring.approval.service.AuthService;
@@ -42,7 +42,7 @@ public class SpringConfig {
 
     @Bean
     public IDocumentListRepository documentListRepository() {
-        return new JdbcDocumentListRepository(dataSource);
+        return new DocumentListRepository(dataSource);
     }
 
     @Bean

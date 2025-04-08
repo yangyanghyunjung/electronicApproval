@@ -46,9 +46,9 @@ public class ExpenseReportRespository {
      */
     public ResponseEntity<String> saveDocument(ExpenseReportRequestDto expenseReport) {
         log.info("[Access-ExpenseReportResponseDto_saveDocument()] 진입");
-        String sql = "INSERT INTO ExpenseReport (docId,FOID, dept,writer,position,title,create_dt,sDate,edate,"
-                + "totalAmount,txtRem,docStatus,currentApproverId,currentApproverName,request_dt,requester,expenseDetails) "
-                + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO ExpenseReport (docId,FOID, dept,writer,position,title,create_dt,sdate,edate,"
+                + "totalAmount,txtRem,docStatus,requester,expenseDetails,approvalFlow) "
+                + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
         try {
             int rowsAffected = jdbcTemplate.update(sql,
@@ -59,16 +59,14 @@ public class ExpenseReportRespository {
                     expenseReport.getPosition(),
                     expenseReport.getTitle(),
                     expenseReport.getCreate_dt(),
-                    expenseReport.getSDate(),
-                    expenseReport.getEDate(),
+                    expenseReport.getSdate(),
+                    expenseReport.getEdate(),
                     expenseReport.getTotalAmount(),
                     expenseReport.getTxtRem(),
                     expenseReport.getDocStatus(),
-                    expenseReport.getCurrentApproverId(),
-                    expenseReport.getCurrentApproverName(),
-                    expenseReport.getRequest_dt(),
                     expenseReport.getRequester(),
-                    expenseReport.getExpenseDetails()
+                    expenseReport.getExpenseDetails(),
+                    expenseReport.getApprovalFlow()
             );
             if (rowsAffected > 0)
             {
@@ -78,16 +76,16 @@ public class ExpenseReportRespository {
             }
 
         } catch (Exception e) {
-            log.error("ExpenseReportResponseDto_saveDocument", e);
+            log.error("❗ ExpenseReportResponseDto_saveDocument 조회 중 오류 발생", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
     @Transactional
-    public ResponseEntity<String> updateDocCurrentApprover(String docId, Optional<Long> currentApproverId) {
-        String sql = "UPDATE ExpenseReport SET currentApprover = ? WHERE docId = ?";
+    public ResponseEntity<String> updateDocStatus(String docId, String docStatus) {
+        String sql = "UPDATE ExpenseReport SET docStatus = ? WHERE docId = ?";
         try {
-            jdbcTemplate.update(sql, currentApproverId , docId);
+            jdbcTemplate.update(sql, docStatus , docId);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
@@ -96,7 +94,6 @@ public class ExpenseReportRespository {
 
     private RowMapper<ExpenseReport> DocumentMapper() {
         return (rs, rowNum) -> {
-
             ExpenseReport expenseReport = new ExpenseReport();
             expenseReport.setDocId(rs.getString("docId"));
             expenseReport.setFOID(rs.getString("FOID"));
@@ -106,15 +103,14 @@ public class ExpenseReportRespository {
             expenseReport.setTitle(rs.getString("title"));
             expenseReport.setPosition(rs.getString("position"));
             expenseReport.setCreate_dt(rs.getDate("create_dt"));
-            expenseReport.setSDate(rs.getDate("sDate"));
-            expenseReport.setEDate(rs.getDate("eDate"));
+            expenseReport.setSdate(rs.getDate("sdate"));
+            expenseReport.setEdate(rs.getDate("edate"));
             expenseReport.setExpenseDetails(rs.getString("expenseDetails"));
             expenseReport.setTotalAmount(rs.getString("totalAmount"));
             expenseReport.setTxtRem(rs.getString("txtRem"));
-            expenseReport.setCurrentApproverId(rs.getLong("currentApproverId"));
-            expenseReport.setCurrentApproverName(rs.getString("currentApproverName"));
-            expenseReport.setDocStatus(rs.getString("request_dt"));
+            expenseReport.setDocStatus(rs.getString("docStatus"));
             expenseReport.setRequester(rs.getString("requester"));
+            expenseReport.setApprovalFlow(rs.getString("approvalFlow"));
 
             return expenseReport;
         };

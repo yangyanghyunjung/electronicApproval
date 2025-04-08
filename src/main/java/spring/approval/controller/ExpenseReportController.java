@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import spring.approval.dto.documents.ExpenseReportRequestDto;
-import spring.approval.dto.documents.UpdateApprovalStateRequestDto;
+import spring.approval.dto.documents.UpdateDocRequestDto;
 import spring.approval.service.documents.ExpenseReportService;
 
 @Slf4j
@@ -26,10 +26,9 @@ public class ExpenseReportController {
         return expenseReportService.draftDoc(expenseReportRequestDto);
     }
 
-    @PostMapping("/update/expenseReprt")
-
-    public ResponseEntity<String> updateApproval(@RequestBody UpdateApprovalStateRequestDto updateApprovalStateRequestDto) {
-        return null;
+    @PostMapping("/update/expenseReport")
+    public ResponseEntity<String> updateApproval(@RequestBody UpdateDocRequestDto updateApprovalStateRequestDto) {
+        return expenseReportService.updateDoc(updateApprovalStateRequestDto);
     }
 
 }

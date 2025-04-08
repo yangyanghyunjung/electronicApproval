@@ -14,16 +14,14 @@ public class ExpenseReportRequestDto {
     private String title;
     private String position;
     private Date create_dt;
-    private Date sDate;
-    private Date eDate;
+    private Date sdate;
+    private Date edate;
     private String expenseDetails;
     private String totalAmount;
     private String txtRem;
     private String docStatus;
-    private Long currentApproverId;
-    private String currentApproverName;
-    private Date request_dt;
     private String requester;
+    private String approvalFlow;
 
     private List<Approver> approvers;
 

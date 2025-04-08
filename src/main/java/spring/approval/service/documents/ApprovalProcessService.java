@@ -26,17 +26,6 @@ public class ApprovalProcessService {
     // findNextApprover return id의  status:"진행", bCurrent:true
     // 각 문서의 currentApproverId : findNextApprover return id로 바꾸기
 
-    public  void updateStatus(String docId, Long memberId) {
-        approverRepository.setBCurrentApproverFalse(docId, memberId);
-        Optional<Long> nextApprover = approverRepository.findNextApprover(docId);
-        if (nextApprover.isPresent()) {
-            approverRepository.setBCurrentApproverTrue(docId, nextApprover.get());
-            expenseReportRespository.updateDocCurrentApprover(docId, nextApprover);
-        }
-        else {
-            // 문서 종료 currentApprover 없애기
-        }
-    }
 
 
 }

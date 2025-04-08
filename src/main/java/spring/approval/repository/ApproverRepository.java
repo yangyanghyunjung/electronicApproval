@@ -21,7 +21,7 @@ public class ApproverRepository {
     }
 
     public void saveApprovers(List<Approver> approvers) {
-        String sql = "INSERT INTO approver (docId,memberId,memberName,dept,position,approvalType,approvalOrder,bCurrentApprover,status) "
+        String sql = "INSERT INTO approver (docId,memberId,memberName,dept,position,approvalType,approvalOrder,bActiveApprover,status) "
                 + "VALUES (?,?,?,?,?,?,?,?,?)";
 
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
@@ -35,7 +35,7 @@ public class ApproverRepository {
                 ps.setString(5, approver.getPosition());
                 ps.setString(6, approver.getApprovalType());
                 ps.setInt(7, approver.getApprovalOrder());
-                ps.setBoolean(8, approver.getBCurrentApprover());
+                ps.setBoolean(8, approver.getBActiveApprover());
                 ps.setString(9, approver.getStatus());
 
             }
@@ -47,8 +47,6 @@ public class ApproverRepository {
 
         });
     }
-
-
 
     /**
      * getApprovers 조회
@@ -65,19 +63,36 @@ public class ApproverRepository {
         }
     }
 
-    public void setBCurrentApproverFalse(String docId, Long memberId) {
-        String sql = "UPDATE Approver SET bCurrentApprover = fasle WHERE docId = ? AND memberId = ?";
-        jdbcTemplate.update(sql,docId, memberId);
+    public void setCurrentApproverInactive(String docId, Long memberId) {
+        String sql = "UPDATE Approver SET bActiveApprover = false, status = '완료' WHERE docId = ? AND memberId = ?";
+        try {
+            jdbcTemplate.update(sql, docId, memberId);
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
     }
 
-    public void setBCurrentApproverTrue(String docId, Long memberId) {
-        String sql = "UPDATE Approver SET bCurrentApprover = true WHERE docId = ? AND memberId = ?";
-        jdbcTemplate.update(sql,docId, memberId);
+    public void setNextApproverActive(String docId, int approvalOrder) {
+        String sql = "UPDATE Approver SET bActiveApprover = true  WHERE docId = ? AND approvalOrder = ?";
+        try {
+            jdbcTemplate.update(sql, docId, approvalOrder);
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
     }
 
-    public Optional<Long> findNextApprover(String docId) {
-        String sql = "SELECT * FROM member WHERE docId = ? AND bCurrentApprover = false AND approvalType = '대기' ORER BY approvalOrder LIMIT 1";
-        return jdbcTemplate.query(sql, new Object[]{docId}, (rs, rowNum) -> rs.getLong("docId")).stream().findAny();
+    public boolean isApprovalGroupComplete(String docId, int approvalOrder) {
+        String sql = "SELECT COUNT(*) FROM Approver WHERE docId =? AND approvalOrder=? AND status='대기'";
+        try {
+            Integer remaining = jdbcTemplate.queryForObject(sql, Integer.class, docId, approvalOrder);
+            return remaining == 0;
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw e;
+        }
     }
 
 
@@ -92,7 +107,7 @@ public class ApproverRepository {
             approver.setPosition(rs.getString("position"));
             approver.setApprovalType(rs.getString("approvalType"));
             approver.setApprovalOrder(rs.getInt("approvalOrder"));
-            approver.setBCurrentApprover(rs.getBoolean("bCurrentApprover"));
+            approver.setBActiveApprover(rs.getBoolean("bActiveApprover"));
             approver.setStatus(rs.getString("status"));
 
             log.info("[ApproverRepository_approverRowMapper()] approver.getDocId={} ", approver.getDocId());

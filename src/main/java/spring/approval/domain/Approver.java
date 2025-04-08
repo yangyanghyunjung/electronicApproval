@@ -12,10 +12,18 @@ public class Approver {
     private String position;
     private String approvalType; // 기안, 합의, 검토, 승인
     private int approvalOrder ; //group 으로 묶는거 고려 -> 병렬처리
-    @JsonProperty("bCurrentApprover")
-    private Boolean bCurrentApprover;
+    @JsonProperty("bActiveApprover")
+    private Boolean bActiveApprover;
     private String status; // 대기, 완료, 반려
 
     public Approver() {
+    }
+
+    public void setStatus(String status) {
+        if (status == null || status.trim().isEmpty()) {
+            this.status = "대기";
+        } else {
+            this.status = status;
+        }
     }
 }

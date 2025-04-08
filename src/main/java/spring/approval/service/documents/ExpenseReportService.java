@@ -3,11 +3,11 @@ package spring.approval.service.documents;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import spring.approval.domain.Approver;
 import spring.approval.domain.ExpenseDetails;
 import spring.approval.domain.ExpenseReport;
@@ -15,8 +15,10 @@ import spring.approval.dto.ApproverResponseDto;
 import spring.approval.dto.documents.DocumentResponseDto;
 import spring.approval.dto.documents.ExpenseReportRequestDto;
 import spring.approval.dto.documents.ExpenseReportResponseDto;
+import spring.approval.dto.documents.UpdateDocRequestDto;
 import spring.approval.repository.ApproverRepository;
 import spring.approval.repository.documents.ExpenseReportRespository;
+import spring.approval.util.ApprovalFlow;
 import spring.approval.util.DocumentIdGenerator;
 
 @Service
@@ -41,7 +43,7 @@ public class ExpenseReportService implements IDocumentService<ExpenseReportReque
     public DocumentResponseDto getDocument(String docId, String FOID) {
         ExpenseReport expenseReport = expenseReportRespository.getDocument(docId, FOID);
        
-        List<ApproverResponseDto> approvers = approverRepository.getApprovers(docId); // 이게 뭐지??? 결재선 가져오는 거 같음
+        List<ApproverResponseDto> approvers = approverRepository.getApprovers(docId);
         List<ExpenseDetails> expenseDetails = mapJsonStrToObject(expenseReport.getExpenseDetails());
 
         ExpenseReportResponseDto expenseReportResponseDto = new ExpenseReportResponseDto();
@@ -52,16 +54,14 @@ public class ExpenseReportService implements IDocumentService<ExpenseReportReque
         expenseReportResponseDto.setTitle(expenseReport.getTitle());
         expenseReportResponseDto.setPosition(expenseReport.getPosition());
         expenseReportResponseDto.setCreate_dt(expenseReport.getCreate_dt());
-        expenseReportResponseDto.setsDate(expenseReport.getSDate());
-        expenseReportResponseDto.seteDate(expenseReport.getSDate());
+        expenseReportResponseDto.setSdate(expenseReport.getSdate());
+        expenseReportResponseDto.setEdate(expenseReport.getEdate());
         expenseReportResponseDto.setExpenseDetails(expenseDetails);
         expenseReportResponseDto.setTotalAmount(expenseReport.getTotalAmount());
         expenseReportResponseDto.setTxtRem(expenseReport.getTxtRem());
         expenseReportResponseDto.setDocStatus(expenseReport.getDocStatus());
-        expenseReportResponseDto.setCurrentApproverId(expenseReport.getCurrentApproverId());
-        expenseReportResponseDto.setCurrentApproverName(expenseReport.getCurrentApproverName());
-        expenseReportResponseDto.setRequest_dt(expenseReport.getRequest_dt());
         expenseReportResponseDto.setRequester(expenseReport.getRequester());
+        expenseReportResponseDto.setApprovalFlow(expenseReport.getApprovalFlow());
 
 
         DocumentResponseDto documentResponseDto = new DocumentResponseDto(approvers, expenseReportResponseDto);
@@ -70,6 +70,7 @@ public class ExpenseReportService implements IDocumentService<ExpenseReportReque
 
 
     @Override
+    @Transactional
     public ResponseEntity<String> draftDoc(ExpenseReportRequestDto document) {
         // docId generate (공통)
         String docId = DocumentIdGenerator.generateDocId(document.getFOID());
@@ -81,12 +82,32 @@ public class ExpenseReportService implements IDocumentService<ExpenseReportReque
         List<Approver> approvers =  document.getApprovers();
         for (Approver approver : approvers) {
             approver.setDocId(docId);
-            log.info("bCurrentApprover={}", approver.getBCurrentApprover());
         }
+
+        // approvalFlow
+        String approvalFlow = ApprovalFlow.generateApprovalFlow(approvers);
+        document.setApprovalFlow(approvalFlow);
 
         // Approvers
         approverRepository.saveApprovers(document.getApprovers());
         return expenseReportRespository.saveDocument(document);
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<String> updateDoc(UpdateDocRequestDto updateDocRequestDto) {
+        String docId = updateDocRequestDto.getDocId();
+        Long memberId = updateDocRequestDto.getMemberId();
+        int approvalOrder = updateDocRequestDto.getApprovalOrder();
+
+        approverRepository.setCurrentApproverInactive(docId, memberId);
+
+        if (approverRepository.isApprovalGroupComplete(docId, approvalOrder)) {
+            approverRepository.setNextApproverActive(docId, approvalOrder + 1);
+            String nextDocStatus = ApprovalFlow.getNextDocStatus(approvalOrder, updateDocRequestDto.getApprovalFlow());
+            expenseReportRespository.updateDocStatus(docId,nextDocStatus);
+        }
+        return ResponseEntity.ok("업데이트 성공");
     }
 
 
