@@ -1,7 +1,6 @@
 package spring.approval.repository.user;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import spring.approval.domain.Member;
 import spring.approval.dto.user.UserInfoResponseDto;

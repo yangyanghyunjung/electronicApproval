@@ -12,7 +12,7 @@ import spring.approval.repository.user.JdbcTemplateMemberRepository;
 import spring.approval.repository.user.MemberRepository;
 import spring.approval.service.AuthService;
 import spring.approval.service.DocumentListService;
-import spring.approval.service.documents.ExpenseReportService;
+import spring.approval.service.documents.ExpenseDocService;
 import spring.approval.service.MemberService;
 
 @Configuration
@@ -51,8 +51,8 @@ public class SpringConfig {
     }
 
     @Bean
-    public ExpenseReportService expenseReportService() {
-        return new ExpenseReportService(expenseReportRespository(),approverRepository());
+    public ExpenseDocService expenseReportService() {
+        return new ExpenseDocService(expenseReportRespository(),approverRepository());
     }
 
     @Bean

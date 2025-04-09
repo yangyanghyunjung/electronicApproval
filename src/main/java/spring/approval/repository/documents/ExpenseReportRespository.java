@@ -1,6 +1,5 @@
 package spring.approval.repository.documents;
 
-import java.util.Optional;
 import javax.sql.DataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.transaction.annotation.Transactional;
-import spring.approval.domain.ExpenseReport;
+import spring.approval.domain.ExpenseDoc;
 import spring.approval.dto.documents.ExpenseReportRequestDto;
 
 @Slf4j
@@ -27,11 +26,11 @@ public class ExpenseReportRespository {
      * @param FOID
      * @return
      */
-    public ExpenseReport getDocument(String docId, String FOID) {
+    public ExpenseDoc getDocument(String docId, String FOID) {
         log.info("[Access-ExpenseReportRepository_getDocument()] docId={}, FOID={}", docId, FOID);
         try {
-            ExpenseReport expenseReport = jdbcTemplate.queryForObject("select * from ExpenseReport where docId=?", DocumentMapper(), docId);
-            return expenseReport;
+            ExpenseDoc expenseDoc = jdbcTemplate.queryForObject("select * from ExpenseReport where docId=?", DocumentMapper(), docId);
+            return expenseDoc;
 
         } catch (Exception e) {
             log.error("❗ expenseReport 조회 중 오류 발생", e);
@@ -41,10 +40,10 @@ public class ExpenseReportRespository {
 
     /**
      * 지출결의서  저장 (기안)
-     * @param expenseReport
+     * @param expenseDoc
      * @return
      */
-    public ResponseEntity<String> saveDocument(ExpenseReportRequestDto expenseReport) {
+    public ResponseEntity<String> draftDoc(ExpenseDoc expenseDoc) {
         log.info("[Access-ExpenseReportResponseDto_saveDocument()] 진입");
         String sql = "INSERT INTO ExpenseReport (docId,FOID, dept,writer,position,title,create_dt,sdate,edate,"
                 + "totalAmount,txtRem,docStatus,requester,expenseDetails,approvalFlow) "
@@ -52,21 +51,21 @@ public class ExpenseReportRespository {
 
         try {
             int rowsAffected = jdbcTemplate.update(sql,
-                    expenseReport.getDocId(),
-                    expenseReport.getFOID(),
-                    expenseReport.getDept(),
-                    expenseReport.getWriter(),
-                    expenseReport.getPosition(),
-                    expenseReport.getTitle(),
-                    expenseReport.getCreate_dt(),
-                    expenseReport.getSdate(),
-                    expenseReport.getEdate(),
-                    expenseReport.getTotalAmount(),
-                    expenseReport.getTxtRem(),
-                    expenseReport.getDocStatus(),
-                    expenseReport.getRequester(),
-                    expenseReport.getExpenseDetails(),
-                    expenseReport.getApprovalFlow()
+                    expenseDoc.getDocId(),
+                    expenseDoc.getFOID(),
+                    expenseDoc.getDept(),
+                    expenseDoc.getWriter(),
+                    expenseDoc.getPosition(),
+                    expenseDoc.getTitle(),
+                    expenseDoc.getCreate_dt(),
+                    expenseDoc.getSdate(),
+                    expenseDoc.getEdate(),
+                    expenseDoc.getTotalAmount(),
+                    expenseDoc.getTxtRem(),
+                    expenseDoc.getDocStatus(),
+                    expenseDoc.getRequester(),
+                    expenseDoc.getExpenseDetails(),
+                    expenseDoc.getApprovalFlow()
             );
             if (rowsAffected > 0)
             {
@@ -92,27 +91,27 @@ public class ExpenseReportRespository {
         return ResponseEntity.ok("문서 업데이트 성공");
     }
 
-    private RowMapper<ExpenseReport> DocumentMapper() {
+    private RowMapper<ExpenseDoc> DocumentMapper() {
         return (rs, rowNum) -> {
-            ExpenseReport expenseReport = new ExpenseReport();
-            expenseReport.setDocId(rs.getString("docId"));
-            expenseReport.setFOID(rs.getString("FOID"));
-            expenseReport.setTitle(rs.getString("dept"));
-            expenseReport.setWriter(rs.getString("writer"));
-            expenseReport.setDept(rs.getString("dept"));
-            expenseReport.setTitle(rs.getString("title"));
-            expenseReport.setPosition(rs.getString("position"));
-            expenseReport.setCreate_dt(rs.getDate("create_dt"));
-            expenseReport.setSdate(rs.getDate("sdate"));
-            expenseReport.setEdate(rs.getDate("edate"));
-            expenseReport.setExpenseDetails(rs.getString("expenseDetails"));
-            expenseReport.setTotalAmount(rs.getString("totalAmount"));
-            expenseReport.setTxtRem(rs.getString("txtRem"));
-            expenseReport.setDocStatus(rs.getString("docStatus"));
-            expenseReport.setRequester(rs.getString("requester"));
-            expenseReport.setApprovalFlow(rs.getString("approvalFlow"));
+            ExpenseDoc expenseDoc = new ExpenseDoc();
+            expenseDoc.setDocId(rs.getString("docId"));
+            expenseDoc.setFOID(rs.getString("FOID"));
+            expenseDoc.setTitle(rs.getString("dept"));
+            expenseDoc.setWriter(rs.getString("writer"));
+            expenseDoc.setDept(rs.getString("dept"));
+            expenseDoc.setTitle(rs.getString("title"));
+            expenseDoc.setPosition(rs.getString("position"));
+            expenseDoc.setCreate_dt(rs.getDate("create_dt"));
+            expenseDoc.setSdate(rs.getDate("sdate"));
+            expenseDoc.setEdate(rs.getDate("edate"));
+            expenseDoc.setExpenseDetails(rs.getString("expenseDetails"));
+            expenseDoc.setTotalAmount(rs.getString("totalAmount"));
+            expenseDoc.setTxtRem(rs.getString("txtRem"));
+            expenseDoc.setDocStatus(rs.getString("docStatus"));
+            expenseDoc.setRequester(rs.getString("requester"));
+            expenseDoc.setApprovalFlow(rs.getString("approvalFlow"));
 
-            return expenseReport;
+            return expenseDoc;
         };
     }
 

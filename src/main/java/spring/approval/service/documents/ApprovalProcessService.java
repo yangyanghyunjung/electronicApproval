@@ -1,6 +1,5 @@
 package spring.approval.service.documents;
 
-import java.util.Optional;
 import org.springframework.stereotype.Service;
 import spring.approval.repository.ApproverRepository;
 import spring.approval.repository.documents.ExpenseReportRespository;
@@ -8,13 +7,13 @@ import spring.approval.repository.documents.ExpenseReportRespository;
 @Service
 public class ApprovalProcessService {
     private final ExpenseReportRespository expenseReportRespository;
-    private final AbsenteeismApprovalService absenteeismApprovalService;
+    private final VacationDocService absenteeismApprovalService;
     private final ApproverRepository approverRepository;
 
 
 
     public ApprovalProcessService(ExpenseReportRespository expenseReportRespository,
-                                  AbsenteeismApprovalService absenteeismApprovalService,
+                                  VacationDocService absenteeismApprovalService,
                                   ApproverRepository approverRepository) {
         this.expenseReportRespository = expenseReportRespository;
         this.absenteeismApprovalService = absenteeismApprovalService;

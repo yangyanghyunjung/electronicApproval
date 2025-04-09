@@ -1,5 +1,8 @@
 package spring.approval.dto.documents;
 
+import lombok.Data;
+
+@Data
 public class DocumentIdentifierDto {
     private String docId;
     private String FOID;
@@ -9,19 +12,4 @@ public class DocumentIdentifierDto {
         this.FOID = FOID;
     }
 
-    public String getDocId() {
-        return docId;
-    }
-
-    public void setDocId(String docId) {
-        this.docId = docId;
-    }
-
-    public String getFOID() {
-        return FOID;
-    }
-
-    public void setFOID(String FOID) {
-        this.FOID = FOID;
-    }
 }
