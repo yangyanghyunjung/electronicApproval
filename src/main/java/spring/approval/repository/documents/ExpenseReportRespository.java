@@ -7,15 +7,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import spring.approval.domain.ExpenseDoc;
 import spring.approval.dto.documents.ExpenseReportRequestDto;
 
 @Slf4j
+@Repository
 public class ExpenseReportRespository {
     private final JdbcTemplate jdbcTemplate;
 
-    @Autowired
+
     public ExpenseReportRespository(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
@@ -23,11 +25,10 @@ public class ExpenseReportRespository {
     /**
      * 지출결의서 조회
      * @param docId
-     * @param FOID
      * @return
      */
-    public ExpenseDoc getDocument(String docId, String FOID) {
-        log.info("[Access-ExpenseReportRepository_getDocument()] docId={}, FOID={}", docId, FOID);
+    public ExpenseDoc getDocument(String docId) {
+        log.info("[Access-ExpenseReportRepository_getDocument()] docId={}, FOID={}", docId);
         try {
             ExpenseDoc expenseDoc = jdbcTemplate.queryForObject("select * from ExpenseReport where docId=?", DocumentMapper(), docId);
             return expenseDoc;

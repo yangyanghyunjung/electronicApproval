@@ -50,19 +50,19 @@ public class SpringConfig {
         return new AuthService(memberRepository());
     }
 
-    @Bean
-    public ExpenseDocService expenseReportService() {
-        return new ExpenseDocService(expenseReportRespository(),approverRepository());
-    }
+//    @Bean
+//    public ExpenseDocService expenseReportService() {
+//        return new ExpenseDocService(expenseReportRespository(),approverRepository());
+//    }
 
-    @Bean
-    public ExpenseReportRespository expenseReportRespository() {
-        return new ExpenseReportRespository(dataSource);
-    }
-    @Bean
-    public ApproverRepository approverRepository() {
-        return new ApproverRepository(dataSource);
-    }
+//    @Bean
+//    public ExpenseReportRespository expenseReportRespository() {
+//        return new ExpenseReportRespository(dataSource);
+//    }
+//    @Bean
+//    public ApproverRepository approverRepository() {
+//        return new ApproverRepository(dataSource);
+//    }
 
 
 

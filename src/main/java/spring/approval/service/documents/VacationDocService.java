@@ -1,16 +1,17 @@
 package spring.approval.service.documents;
 
 import org.springframework.stereotype.Service;
+import spring.approval.domain.EFormType;
 import spring.approval.dto.documents.DocumentResponseDto;
 import spring.approval.dto.documents.DraftRequestDto;
 import spring.approval.dto.documents.UpdateDocRequestDto;
 import spring.approval.dto.documents.VacationDocDto;
 
-@Service
+@Service("VACATION")
 public class VacationDocService implements IDocumentService{
 
     @Override
-    public DocumentResponseDto getDocument(String docId, String FOID) {
+    public DocumentResponseDto getDocument(String docId) {
         return null;
     }
 
@@ -22,5 +23,10 @@ public class VacationDocService implements IDocumentService{
     @Override
     public void updateDoc(UpdateDocRequestDto updateDocRequestDto) {
 
+    }
+
+    @Override
+    public EFormType getFormType() {
+        return EFormType.VACATION;
     }
 }

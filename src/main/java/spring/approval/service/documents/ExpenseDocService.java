@@ -8,12 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import spring.approval.domain.Approver;
+import spring.approval.domain.EFormType;
 import spring.approval.domain.ExpenseDetails;
 import spring.approval.domain.ExpenseDoc;
 import spring.approval.dto.ApproverResponseDto;
 import spring.approval.dto.documents.DocumentResponseDto;
 import spring.approval.dto.documents.DraftRequestDto;
-import spring.approval.dto.documents.ExpenseReportRequestDto;
 import spring.approval.dto.documents.ExpenseReportResponseDto;
 import spring.approval.dto.documents.UpdateDocRequestDto;
 import spring.approval.repository.ApproverRepository;
@@ -22,7 +22,7 @@ import spring.approval.util.ApprovalFlow;
 import spring.approval.util.DocumentIdGenerator;
 
 @Slf4j
-@Service
+@Service("EXPENSE")
 public class ExpenseDocService implements IDocumentService {
    private final ExpenseReportRespository expenseReportRespository;
    private final ApproverRepository approverRepository;
@@ -38,11 +38,10 @@ public class ExpenseDocService implements IDocumentService {
     /**
      * 문서 조회
      * @param docId
-     * @param FOID
      * @return
      */
-    public DocumentResponseDto getDocument(String docId, String FOID) {
-        ExpenseDoc expenseDoc = expenseReportRespository.getDocument(docId, FOID);
+    public DocumentResponseDto getDocument(String docId) {
+        ExpenseDoc expenseDoc = expenseReportRespository.getDocument(docId);
        
         List<ApproverResponseDto> approvers = approverRepository.getApprovers(docId);
         List<ExpenseDetails> expenseDetails = mapJsonStrToObject(expenseDoc.getExpenseDetails());
@@ -139,4 +138,8 @@ public class ExpenseDocService implements IDocumentService {
         }
     }
 
+    @Override
+    public EFormType getFormType() {
+        return EFormType.EXPENSE;
+    }
 }

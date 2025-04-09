@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import spring.approval.dto.documents.DocumentIdentifierDto;
 import spring.approval.dto.documents.DocumentResponseDto;
+import spring.approval.service.DocumentServiceFactory;
 import spring.approval.service.documents.VacationDocService;
 import spring.approval.service.documents.ExpenseDocService;
 
@@ -15,33 +16,18 @@ import spring.approval.service.documents.ExpenseDocService;
 @RestController
 @CrossOrigin("http://localhost:5173")
 public class DocumentController {
-    private final ExpenseDocService expenseDocService;
-    private final VacationDocService absenteeismApprovalService;
+    private final DocumentServiceFactory documentServiceFactory;
 
     @Autowired
-    public DocumentController(ExpenseDocService expenseDocService,
-                              VacationDocService absenteeismApprovalService)
+    public DocumentController( DocumentServiceFactory documentServiceFactory)
     {
-        this.expenseDocService = expenseDocService;
-        this.absenteeismApprovalService = absenteeismApprovalService;
+        this.documentServiceFactory = documentServiceFactory;
     }
 
     @PostMapping("/getDocument")
-    public DocumentResponseDto getDocument(@RequestBody DocumentIdentifierDto param) {
-        String docId = param.getDocId();
-        String FOID = param.getFOID();
-
-        log.info("[DocumentController-DocumentResponseDto()] docId={}, FOID={}", docId, FOID);
-
-        switch (FOID)
-        {
-            case "A0AF0E1":
-                return expenseDocService.getDocument(docId, FOID);
-            case "6B1E74F":
-                return expenseDocService.getDocument(docId, FOID);
-            default:
-                throw new IllegalArgumentException("지원하지 않는 FOID입니다: " + FOID);
-        }
+    public DocumentResponseDto getDocument(@RequestBody DocumentIdentifierDto request) {
+        return documentServiceFactory.getService(request.getFormType())
+                .getDocument(request.getDocId());
     }
 
 }

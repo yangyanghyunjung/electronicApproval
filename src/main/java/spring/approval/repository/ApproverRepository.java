@@ -9,10 +9,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 import spring.approval.domain.Approver;
 import spring.approval.dto.ApproverResponseDto;
 
 @Slf4j
+@Repository
 public class ApproverRepository {
     private final JdbcTemplate jdbcTemplate;
 
