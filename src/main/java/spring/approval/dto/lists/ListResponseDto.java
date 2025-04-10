@@ -2,7 +2,7 @@ package spring.approval.dto.lists;
 
 import java.util.List;
 import lombok.Data;
-import spring.approval.domain.DocumentList;
+import spring.approval.domain.list.DocumentList;
 
 @Data
 public class ListResponseDto {

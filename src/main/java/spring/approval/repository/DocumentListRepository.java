@@ -7,7 +7,8 @@ import javax.sql.DataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
-import spring.approval.domain.DocumentList;
+import spring.approval.domain.list.DocumentList;
+import spring.approval.domain.list.EListType;
 import spring.approval.dto.lists.ListResponseDto;
 
 @Slf4j
@@ -19,9 +20,9 @@ public class DocumentListRepository implements IDocumentListRepository {
     }
 
     @Override
-    public ListResponseDto getList(Long userId, String where_condition, int startNo) {
-        log.info("[Access-JdbcDocumnetListRepository] userId={}, where_condition={}, startNo={}", userId, where_condition, startNo);
-        SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate).withProcedureName("getApprovalList2")
+    public ListResponseDto getList(Long userId, String filter_search_condition, EListType listType, int startNo) {
+        log.info("[Access-JdbcDocumnetListRepository] userId={}, filter_search_condition={}, startNo={}", userId, filter_search_condition, startNo);
+        SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate).withProcedureName("getApprovalList")
                 .returningResultSet("result", (rs, rowNum) -> {
                     DocumentList documentList = new DocumentList();
                     documentList.setDocId(rs.getString("docId"));
@@ -35,7 +36,8 @@ public class DocumentListRepository implements IDocumentListRepository {
         // 파라미터 설정
         Map<String, Object> inParams = new HashMap<>();
         inParams.put("userId", userId);
-        inParams.put("where_condition", where_condition);
+        inParams.put("filter_search_condition", filter_search_condition);
+        inParams.put("listType", listType.getLabel());
         inParams.put("startNo", startNo);
 
         Map<String, Object> result = null;
@@ -44,15 +46,15 @@ public class DocumentListRepository implements IDocumentListRepository {
         }
         catch (Exception e)
         {
-            log.error("[getTotalCount] Exception: {}", e.getMessage(), e);
+            log.error("[getApproval] Exception: {}", e.getMessage(), e);
         }
-        return new ListResponseDto((List<DocumentList>) result.get("result"),getTotalCount(userId, where_condition, startNo));
+        return new ListResponseDto((List<DocumentList>) result.get("result"),getTotalCount(userId, filter_search_condition, listType));
     }
 
     @Override
-    public int getTotalCount(Long userId, String where_condition, int startNo) {
-        String sql = "CALL getTotalCount(?, ?)"; // 프로시저 호출 쿼리
-        return jdbcTemplate.queryForObject(sql, new Object[]{userId, where_condition}, Integer.class);
+    public int getTotalCount(Long userId, String filter_search_condition, EListType listType) {
+        String sql = "CALL getTotalCount(?, ?, ?)"; // 프로시저 호출 쿼리
+        return jdbcTemplate.queryForObject(sql, new Object[]{userId, filter_search_condition, listType.getLabel()}, Integer.class);
     }
 
 }

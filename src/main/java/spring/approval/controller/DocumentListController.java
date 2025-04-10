@@ -24,6 +24,6 @@ public class DocumentListController {
     public ListResponseDto getApprovalList(@RequestBody ListRequestDto param) {
         log.info("[DocumentController_getApprovalList] userId={}, query={}, startNo={}", param.getUserId(), param.getQuery(), param.getStartNo());
 
-        return documentListService.getList(param.getUserId(), param.getQuery(), param.getStartNo());
+        return documentListService.getList(param.getUserId(), param.getQuery(), param.getListType() , param.getStartNo());
     }
 }

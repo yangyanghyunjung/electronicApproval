@@ -1,4 +1,4 @@
-package spring.approval.domain;
+package spring.approval.domain.list;
 
 import lombok.Data;
 
