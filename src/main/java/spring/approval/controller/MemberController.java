@@ -5,21 +5,20 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import spring.approval.domain.Member;
-import spring.approval.domain.MemberForm;
-import spring.approval.dto.LoginFormDto;
+import spring.approval.domain.user.Member;
+import spring.approval.domain.user.MemberForm;
+import spring.approval.dto.user.LoginFormDto;
 import spring.approval.dto.user.UserInfoResponseDto;
 import spring.approval.service.MemberService;
 
 @Slf4j
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
+@RequestMapping("/user")
 public class MemberController {
     private final MemberService memberService;
 
@@ -34,7 +33,7 @@ public class MemberController {
      * @param form
      * @return
      */
-    @PostMapping(value = "/members/new")
+    @PostMapping(value = "/new")
     public ResponseEntity<String> create(@RequestBody MemberForm form) {
 
         log.info("[create] email={}, name={}, password={}", form.getEmail(), form.getName(), form.getPassword());
@@ -55,7 +54,7 @@ public class MemberController {
      * @param session
      * @return
      */
-    @PostMapping(value = "/members/login")
+    @PostMapping(value = "/login")
     // 굳이 UserInfoDto로 return할 필요가 있나?
     public UserInfoResponseDto logIn(@RequestBody LoginFormDto loginForm, HttpSession session) {
         Member member = memberService.login(loginForm);
@@ -68,18 +67,30 @@ public class MemberController {
     }
 
     /**
+     * 로그아웃
+     * @param session
+     * @return
+     */
+    @GetMapping("/logout")
+    public ResponseEntity<String> logout(HttpSession session) {
+        log.info("[AuthController-logout()] userInfo= {}", session.getAttribute("userInfo"));
+        session.invalidate();
+        return ResponseEntity.ok("Logged out");
+    }
+
+    /**
      * user 정보 반환
      * @param session
      * @return
      */
-    @PostMapping("/userInfo")
+    @GetMapping("/userInfo")
     public UserInfoResponseDto getUserInfo(HttpSession session) {
-        Member member = (Member) session.getAttribute("userInfo");
-        if (member == null) {
+        UserInfoResponseDto userInfo = (UserInfoResponseDto) session.getAttribute("userInfo");
+        log.info("[AuthController-getUserInfo()] userInfo= {}", userInfo);
+        if (userInfo == null) {
             return null;
         }
-        return new UserInfoResponseDto(
-                member.getId(), member.getEmail(), member.getName(), member.getDept(), member.getPosition());
+        return userInfo;
     }
 
     /**

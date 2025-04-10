@@ -27,7 +27,4 @@ public class ExpenseReportRequestDto {
 
     private Map<String, Object> content; // 문서 고유 필드들
     private List<Approver> approvers;
-
-    public ExpenseReportRequestDto() {
-    }
 }

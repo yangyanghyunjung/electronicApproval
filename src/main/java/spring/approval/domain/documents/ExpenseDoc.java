@@ -1,9 +1,9 @@
-package spring.approval.domain;
+package spring.approval.domain.documents;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import lombok.Data;
+import spring.approval.domain.Approver;
 
 @Data
 public class ExpenseDoc {
@@ -18,7 +18,6 @@ public class ExpenseDoc {
     private String requester;
     private String approvalFlow;
 
-//    private Map<String, Object> content; // 문서 고유 필드들
     private Date sdate;
     private Date edate;
     private String expenseDetails;

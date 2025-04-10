@@ -1,4 +1,4 @@
-package spring.approval.util;
+package spring.approval.service.util;
 
 import java.util.List;
 import java.util.stream.Collectors;

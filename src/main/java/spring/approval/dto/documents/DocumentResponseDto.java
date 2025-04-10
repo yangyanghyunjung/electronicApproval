@@ -12,9 +12,6 @@ public class DocumentResponseDto<T> {
 
     private T content;
 
-    public DocumentResponseDto() {
-    }
-
     public DocumentResponseDto(List<ApproverResponseDto> approvers, T content) {
         this.approvers = approvers;
         this.content = content;

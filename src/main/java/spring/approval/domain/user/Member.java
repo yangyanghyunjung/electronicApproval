@@ -1,11 +1,8 @@
-package spring.approval.domain;
+package spring.approval.domain.user;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 @Data
-//@Getter @Setter
 public class Member {
     Long id;
     String email;

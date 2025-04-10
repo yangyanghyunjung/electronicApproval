@@ -16,8 +16,6 @@ public class Approver {
     private Boolean bActiveApprover;
     private String status; // 대기, 완료, 반려
 
-    public Approver() {
-    }
 
     public void setStatus(String status) {
         if (status == null || status.trim().isEmpty()) {

@@ -2,15 +2,13 @@ package spring.approval.repository.documents;
 
 import javax.sql.DataSource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import spring.approval.domain.ExpenseDoc;
-import spring.approval.dto.documents.ExpenseReportRequestDto;
+import spring.approval.domain.documents.ExpenseDoc;
 
 @Slf4j
 @Repository

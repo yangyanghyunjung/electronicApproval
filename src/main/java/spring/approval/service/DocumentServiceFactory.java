@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
-import spring.approval.domain.EFormType;
+import spring.approval.domain.documents.EFormType;
 import spring.approval.service.documents.IDocumentService;
 
 @Service

@@ -3,7 +3,6 @@ package spring.approval.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,7 +12,6 @@ import spring.approval.service.DocumentListService;
 
 @Slf4j
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
 public class DocumentListController {
     private final DocumentListService documentListService;
 

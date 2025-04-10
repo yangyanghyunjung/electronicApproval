@@ -3,7 +3,7 @@ package spring.approval.dto.documents;
 import java.util.Date;
 import java.util.List;
 import lombok.Data;
-import spring.approval.domain.ExpenseDetails;
+import spring.approval.domain.documents.ExpenseDetails;
 
 @Data
 public class ExpenseReportResponseDto {

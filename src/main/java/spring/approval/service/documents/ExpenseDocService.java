@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import spring.approval.domain.Approver;
-import spring.approval.domain.EFormType;
-import spring.approval.domain.ExpenseDetails;
-import spring.approval.domain.ExpenseDoc;
+import spring.approval.domain.documents.EFormType;
+import spring.approval.domain.documents.ExpenseDetails;
+import spring.approval.domain.documents.ExpenseDoc;
 import spring.approval.dto.ApproverResponseDto;
 import spring.approval.dto.documents.DocumentResponseDto;
 import spring.approval.dto.documents.DraftRequestDto;
@@ -18,8 +18,8 @@ import spring.approval.dto.documents.ExpenseReportResponseDto;
 import spring.approval.dto.documents.UpdateDocRequestDto;
 import spring.approval.repository.ApproverRepository;
 import spring.approval.repository.documents.ExpenseReportRespository;
-import spring.approval.util.ApprovalFlow;
-import spring.approval.util.DocumentIdGenerator;
+import spring.approval.service.util.ApprovalFlow;
+import spring.approval.service.util.DocumentIdGenerator;
 
 @Slf4j
 @Service("EXPENSE")
@@ -86,7 +86,6 @@ public class ExpenseDocService implements IDocumentService {
         expenseDoc.setCreate_dt(draftRequestDto.getCreate_dt());
         expenseDoc.setDocStatus(draftRequestDto.getDocStatus());
         expenseDoc.setRequester(draftRequestDto.getRequester());
-        expenseDoc.setApprovalFlow(draftRequestDto.getApprovalFlow());
         expenseDoc.setApprovers(draftRequestDto.getApprovers());
 
         // approvers의 docId도 변경
@@ -95,7 +94,6 @@ public class ExpenseDocService implements IDocumentService {
             approver.setDocId(docId);
         }
 
-        // approvalFlow (DraftDocDto 에서 처리 가능할듯)
         String approvalFlow = ApprovalFlow.generateApprovalFlow(approvers);
         expenseDoc.setApprovalFlow(approvalFlow);
 

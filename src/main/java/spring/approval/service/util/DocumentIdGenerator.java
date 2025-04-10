@@ -1,4 +1,4 @@
-package spring.approval.util;
+package spring.approval.service.util;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

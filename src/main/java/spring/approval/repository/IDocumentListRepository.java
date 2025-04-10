@@ -1,7 +1,5 @@
 package spring.approval.repository;
 
-import java.util.List;
-import spring.approval.domain.DocumentList;
 import spring.approval.dto.lists.ListResponseDto;
 
 public interface IDocumentListRepository {

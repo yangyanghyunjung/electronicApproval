@@ -1,11 +1,10 @@
 package spring.approval.service;
 
 import java.util.List;
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import spring.approval.domain.Member;
-import spring.approval.dto.LoginFormDto;
+import spring.approval.domain.user.Member;
+import spring.approval.dto.user.LoginFormDto;
 import spring.approval.dto.user.UserInfoResponseDto;
 import spring.approval.repository.user.MemberRepository;
 
@@ -36,7 +35,7 @@ public class MemberService {
      * @param member
      */
     private void validateDuplicateMember(Member member) {
-        memberRepository.findByName(member.getName())
+        memberRepository.findByEmail(member.getEmail())
                 .ifPresent(m -> {
                     throw new IllegalStateException("이미 존재하는 회원입니다.");
                 });
@@ -49,9 +48,7 @@ public class MemberService {
     public List<UserInfoResponseDto> findMembers() {
         return memberRepository.findAll();
     }
-    public Optional<Member> findOne(Long memberId) {
-        return memberRepository.findById(memberId);
-    }
+
 
     /**
      * 로그인

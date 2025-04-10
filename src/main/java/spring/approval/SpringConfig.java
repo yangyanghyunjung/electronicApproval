@@ -4,15 +4,11 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import spring.approval.repository.ApproverRepository;
-import spring.approval.repository.documents.ExpenseReportRespository;
-import spring.approval.repository.IDocumentListRepository;
 import spring.approval.repository.DocumentListRepository;
+import spring.approval.repository.IDocumentListRepository;
 import spring.approval.repository.user.JdbcTemplateMemberRepository;
 import spring.approval.repository.user.MemberRepository;
-import spring.approval.service.AuthService;
 import spring.approval.service.DocumentListService;
-import spring.approval.service.documents.ExpenseDocService;
 import spring.approval.service.MemberService;
 
 @Configuration
@@ -45,10 +41,7 @@ public class SpringConfig {
         return new DocumentListRepository(dataSource);
     }
 
-    @Bean
-    public AuthService authService() {
-        return new AuthService(memberRepository());
-    }
+
 
 //    @Bean
 //    public ExpenseDocService expenseReportService() {
