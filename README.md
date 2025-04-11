@@ -21,7 +21,7 @@ Vue.js, Spring Boot, MySQL을 기반으로 설계 및 구현하였고,
 - 양식함에서 문서 양식을 선택하여 작성 → 기안 제출
 
 
-![Image](https://github.com/user-attachments/assets/cb86114d-f88e-44eb-9d81-8b22b7f7f3bb)   
+![Image](https://github.com/user-attachments/assets/4c15e5d8-b319-4f91-ad74-dbd0b5a5612c)   
 
 
 ### 🤔 고민했던 문제 & 해결 전략
