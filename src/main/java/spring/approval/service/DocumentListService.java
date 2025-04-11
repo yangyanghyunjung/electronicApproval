@@ -23,6 +23,8 @@ public class DocumentListService {
      * @return
      */
     public ListResponseDto getList(Long userId, String query, EListType listType, int startNo) {
+
+
         return iDocumentListRepository.getList(userId, query, listType, startNo);
     }
 
