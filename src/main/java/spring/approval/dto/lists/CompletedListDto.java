@@ -4,7 +4,7 @@ import java.util.Date;
 import lombok.Data;
 
 @Data
-public class ProgressListDto {
+public class CompletedListDto {
     private String docId;
     private String title;
     private String FOID ;
@@ -12,8 +12,8 @@ public class ProgressListDto {
     private String requester;
     private Date create_dt;
 
-    public ProgressListDto(String docId, String title, String FOID, String docStatus, String requester,
-                           Date create_dt) {
+    public CompletedListDto(String docId, String title, String FOID, String docStatus, String requester,
+                            Date create_dt) {
         this.docId = docId;
         this.title = title;
         this.FOID = FOID;

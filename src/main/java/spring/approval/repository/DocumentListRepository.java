@@ -7,11 +7,12 @@ import javax.sql.DataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
+import org.springframework.stereotype.Repository;
 import spring.approval.domain.list.DocumentList;
 import spring.approval.domain.list.EListType;
-import spring.approval.dto.lists.ListResponseDto;
 
 @Slf4j
+@Repository
 public class DocumentListRepository implements IDocumentListRepository {
     private final JdbcTemplate jdbcTemplate;
 
@@ -20,7 +21,7 @@ public class DocumentListRepository implements IDocumentListRepository {
     }
 
     @Override
-    public ListResponseDto getList(Long userId, String filter_search_condition, EListType listType, int startNo) {
+    public List<DocumentList> getList(Long userId, String filter_search_condition, EListType listType, int startNo) {
         log.info("[Access-JdbcDocumnetListRepository] userId={}, filter_search_condition={}, startNo={}", userId, filter_search_condition, startNo);
         SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate).withProcedureName("getApprovalList")
                 .returningResultSet("result", (rs, rowNum) -> {
@@ -30,6 +31,7 @@ public class DocumentListRepository implements IDocumentListRepository {
                     documentList.setFOID(rs.getString("FOID"));
                     documentList.setDocStatus(rs.getString("docStatus"));
                     documentList.setRequester(rs.getString("requester"));
+                    documentList.setCreate_dt(rs.getDate("create_dt"));
                     return documentList;
                 });
 
@@ -48,7 +50,7 @@ public class DocumentListRepository implements IDocumentListRepository {
         {
             log.error("[getApproval] Exception: {}", e.getMessage(), e);
         }
-        return new ListResponseDto((List<DocumentList>) result.get("result"),getTotalCount(userId, filter_search_condition, listType));
+        return  (List<DocumentList>) result.get("result");
     }
 
     @Override

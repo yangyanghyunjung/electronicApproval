@@ -31,32 +31,4 @@ public class SpringConfig {
         return new JdbcTemplateMemberRepository(dataSource);
     }
 
-    @Bean
-    public DocumentListService documentListService() {
-        return new DocumentListService(documentListRepository());
-    }
-
-    @Bean
-    public IDocumentListRepository documentListRepository() {
-        return new DocumentListRepository(dataSource);
-    }
-
-
-
-//    @Bean
-//    public ExpenseDocService expenseReportService() {
-//        return new ExpenseDocService(expenseReportRespository(),approverRepository());
-//    }
-
-//    @Bean
-//    public ExpenseReportRespository expenseReportRespository() {
-//        return new ExpenseReportRespository(dataSource);
-//    }
-//    @Bean
-//    public ApproverRepository approverRepository() {
-//        return new ApproverRepository(dataSource);
-//    }
-
-
-
 }

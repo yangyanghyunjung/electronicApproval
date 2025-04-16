@@ -8,22 +8,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import spring.approval.dto.lists.ListRequestDto;
 import spring.approval.dto.lists.ListResponseDto;
-import spring.approval.service.DocumentListService;
+import spring.approval.service.IDocumentListService;
 
 @Slf4j
 @RestController
 public class DocumentListController {
-    private final DocumentListService documentListService;
+    private final IDocumentListService documentListService;
 
     @Autowired
-    public DocumentListController(DocumentListService documentListService) {
+    public DocumentListController(IDocumentListService documentListService) {
         this.documentListService = documentListService;
     }
 
-    @PostMapping(value = "/ApprovalList")
+    @PostMapping(value = "/getList")
     public ListResponseDto getApprovalList(@RequestBody ListRequestDto param) {
-        log.info("[DocumentController_getApprovalList] userId={}, query={}, startNo={}", param.getUserId(), param.getQuery(), param.getStartNo());
+        log.info("[DocumentController_getApprovalList] userId={}, query={}, listType={}, startNo={}", param.getUserId(), param.getQuery(), param.getListType(), param.getStartNo());
 
-        return documentListService.getList(param.getUserId(), param.getQuery(), param.getListType() , param.getStartNo());
+        return documentListService.getList(param.getUserId(), param.getQuery(), param.getListType(), param.getStartNo());
     }
 }
